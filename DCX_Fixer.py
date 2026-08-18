@@ -2,6 +2,8 @@ import sys
 from pathlib import Path
 
 ASSERTED_BYTES = {
+    0x08: b'\x00\x00\x00\x18',
+    0x0D: b'\x00\x00\x24',
     0x17: b'LDCS\0',
     0x24: b'DCP\0',
     0x33: b'\x00', # unk33
@@ -19,7 +21,7 @@ def write(f, offset, value):
 
 def ensure_bytes(file_stream, byte_map: dict) -> bool:
     """Takes a file stream and ensures byte structures at offsets specified in byte_map. Returns True if any actions were taken"""
-    print(f"{'Offset':<10} | {'Value':<20} | {'Status':<10}\n", "-"*50)
+    print(f"{'Offset':<10} | {'Value':<20} | {'Status':<10}\n", "-"*65)
 
     changed: bool = False
     for offset, value in byte_map.items():
@@ -62,15 +64,19 @@ def patch_file(file_path: Path) -> None:
 
     except PermissionError:
         print(f"Error: Permission denied. Could not access '{file_path}'.")
+        input()
     except Exception as e:
         print(f"Error processing '{file_path}': {e}")
+        input()
 
 def main():
     if len(sys.argv) < 2:
         if getattr(sys, "frozen", False):
             print(f"Usage: .\\{Path(sys.argv[0]).name} <file_path(s)>")
+            input()
         else:
             print(f"Usage: python {Path(sys.argv[0]).name} <file_path(s)>")
+            input()
         sys.exit(1)
 
     for arg in sys.argv[1:]:
