@@ -6,6 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+.gitignore
+.gitattributes
+*.txt
+
 # Distribution / packaging
 .Python
 build/
