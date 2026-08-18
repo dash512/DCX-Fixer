@@ -19,16 +19,21 @@ def write(f, offset, value):
 
 def ensure_bytes(file_stream, byte_map: dict) -> bool:
     """Takes a file stream and ensures byte structures at offsets specified in byte_map. Returns True if any actions were taken"""
+    print(f"{'Offset':<10} | {'Value':<20} | {'Status':<10}\n", "-"*50)
+
     changed: bool = False
     for offset, value in byte_map.items():
-        existing_value = read(file_stream, offset, len(value))
-        if existing_value == value:
-            print(f"{value} found at offset {offset}, skipping.")
-            continue
+        status = "Okay"
 
-        print(f"Patching {value} at offset {offset}.")
-        write(file_stream, offset, value)
-        changed = True
+        existing_value = read(file_stream, offset, len(value))
+
+        if existing_value != value:
+            write(file_stream, offset, value)
+            changed = True
+            status = f"Patched -> {value}"
+
+        print(f"{offset:#010x} | {existing_value!s:<20} | {status!s:<10}")
+        
     return changed
 
 def patch_file(file_path: Path) -> None:
@@ -74,5 +79,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+    input()
 
-# python -m PyInstaller DCX_Fixer.py --onefile --noconsole
+# python -m PyInstaller DCX_Fixer.py --onefile
