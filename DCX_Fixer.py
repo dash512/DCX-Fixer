@@ -2,12 +2,30 @@ import sys
 from pathlib import Path
 
 ASSERTED_BYTES = {
+    # Constant Header Field (what is it?)
     0x08: b'\x00\x00\x00\x18',
-    0x0D: b'\x00\x00\x24',
-    0x17: b'LDCS\0',
+
+    # Offset to DCP? (see 0x24)
+    0x0C: b'\x00\x00\x00\x24',
+
+    # Magic
+    0x18: b'DCS\0', # always seems to begin with L?
     0x24: b'DCP\0',
-    0x33: b'\x00', # unk33
+
+    # DCP Header Size
+    0x2C: b'\x00\x00\x00\x20', 
+
+    # Padding ?
+    0x31: b'\x00\x00\x00', # 0x31 - 0x33, individually asserted
+    0x34: b'\x00\x00\x00\x00', # -> 0x37
+    #<unk38>
+    0x39: b'\x00\x00\x00', # 0x39 - 0x3B, individually asserted
+    0x3C: b'\x00\x00\x00\x00', # -> 0x3f
+
+    # Flags?
     0x40: b'\x00\x01\x01\x00',
+
+    # Magic
     0x44: b'DCA\0'
 }
 
